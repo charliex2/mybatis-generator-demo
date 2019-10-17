@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: homestead
+    password: secret
+    url: jdbc:mysql://127.0.0.1:33060/springboot-demo?characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+    schema:
+      - classpath:database/schema.sql
+mybatis:
+  type-handlers-package: com.minglyu.mybatisgeneratordemo.handlers
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/**/*.xml

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 导入配置文件 -->
+    <!--    <properties resource="application.yaml"/>-->
+
+    <!-- defaultModelType="flat" 设置复合主键时不单独为主键创建实体 -->
+    <context id="MySql" defaultModelType="flat" targetRuntime="MyBatis3">
+
+        <!-- 生成的POJO实现java.io.Serializable接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.FluentBuilderMethodsPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="Example$"/>
+            <property name="replaceString" value="Criteria"/>
+        </plugin>
+
+        <!--注释-->
+        <commentGenerator>
+            <!-- 将数据库中表的字段描述信息添加到注释 -->
+            <property name="addRemarkComments" value="true"/>
+            <!-- 注释里不添加日期 -->
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据库连接，直接通过${}读取application.properties里的配置 -->
+        <jdbcConnection
+                driverClass="com.mysql.cj.jdbc.Driver"
+                connectionURL="jdbc:mysql://127.0.0.1:33060/springboot-demo?characterEncoding=utf-8"
+                userId="homestead"
+                password="secret"/>
+
+        <!-- 生成POJO对象，并将类放到com.songguoliang.springboot.entity包下 -->
+        <javaModelGenerator targetPackage="com.minglyu.mybatisgeneratordemo.entities"
+                            targetProject="src/main/java">
+            <property name="enableSubPackage" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成mapper xml文件，并放到resources下的mapper文件夹下 -->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="src/main/resources">
+            <property name="enableSubPackage" value="true"/>
+        </sqlMapGenerator>
+
+
+        <!-- 生成mapper xml对应dao接口，放到com.songguoliang.springboot.mapper包下-->
+        <javaClientGenerator targetPackage="com.minglyu.mybatisgeneratordemo.mappers.auto"
+                             targetProject="src/main/java"
+                             type="XMLMAPPER">
+            <property name="enableSubPackage" value="true"/>
+        </javaClientGenerator>
+
+        <!--        &lt;!&ndash; table标签可以有多个，至少一个，tableName指定表名，可以使用_和%通配符 &ndash;&gt;-->
+        <!--        <table tableName="tbl_user">-->
+        <!--            &lt;!&ndash; 是否只生成POJO对象 &ndash;&gt;-->
+        <!--            <property name="modelOnly" value="false"/>-->
+
+        <!--            &lt;!&ndash; 数据库中表名有时我们都会带个前缀，而实体又不想带前缀，这个配置可以把实体的前缀去掉 &ndash;&gt;-->
+        <!--            <domainObjectRenamingRule searchString="^t_" replaceString=""/>-->
+        <!--        </table>-->
+
+        <table tableName="coffees" domainObjectName="Coffee">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+            <columnOverride column="price"
+                            javaType="org.joda.money.Money"
+                            jdbcType="BIGINT"
+                            typeHandler="com.minglyu.mybatisgeneratordemo.handlers.MoneyTypeHandler"/>
+        </table>
+    </context>
+</generatorConfiguration>
